@@ -1,0 +1,1 @@
+SET DEBUG=locallibrary:* & npm run devstart
