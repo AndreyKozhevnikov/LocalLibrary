@@ -1,4 +1,3 @@
-
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -10,9 +9,6 @@ var index = require('./routes/index');
 var users = require('./routes/users');
 
 var app = express();
-
-require('console-stamp')(console, '[HH:MM:ss.l]');
-require('log-timestamp');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
