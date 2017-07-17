@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "devstart": "set port=5000 && nodemon ./bin/www -V"
+    "devstart": "set port=5000 && nodemon ./bin/www"
   },
   "dependencies": {
     "body-parser": "~1.17.1",
