@@ -2,26 +2,18 @@ extends layout
 
 block content
   h1= title
-  p CustomWelcomeIndex1 to #{title}
-  h1= title
-  
-  |TestPUG
-  p= 'Evaluated and <em>escaped expression</em>:' + title
-  p This is a line with #[em some emphasis] and #[strong strong text] markup. 
-  p This line has an un-escaped string: !{'<em> is emphasised</em>'}, an escaped string: #{'<em> is not emphasised</em>'}, and escaped variables: #{title}.
-  <div class="quote">
-   <p>Joel: <em>Some of the girls are wearing my mother's clothing.</em></p>
-  </div>
-  a(href='http://someurl/') Link text
-  | Plain text
-  if title
-   p A variable named "title" exists
+  p Welcome to #[em LocalLibrary], a very basic Express website developed as a tutorial example on the Mozilla Developer Network.
+
+  h1 Dynamic content
+
+  if error
+    p Error getting dynamic content.
   else
-   p A variable named "title" does not exist
-  if title23
-   p A variable named "title23" exists
-  else
-   p A variable named "title23" does not exist   
-  ul
-   each val in [1, 2, 3, 4, 5]
-    li= val
+    p The library has the following record counts:
+
+    ul
+      li #[strong Books:] !{data.book_count}
+      li #[strong Copies:] !{data.book_instance_count}
+      li #[strong Copies available:] !{data.book_instance_available_count} 
+      li #[strong Authors:] !{data.author_count}
+      li #[strong Genres:] !{data.genre_count}
