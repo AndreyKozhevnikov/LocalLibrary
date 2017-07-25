@@ -152,6 +152,12 @@ exports.book_create_post = function(req, res, next) {
 
 };
 
+//Get book's instances
+function getBookInstances(cb,bookId){
+	BookInstance.find({'book':bookId}).exec(cb);
+}
+
+
 // Display book delete form on GET
 exports.book_delete_get = function(req, res, next) {       
 
@@ -159,9 +165,10 @@ exports.book_delete_get = function(req, res, next) {
         book: function(callback) {     
             Book.findById(req.params.id).exec(callback);
         },
-        book_instances: function(callback) {
-          BookInstance.find({ 'book': req.params.id }).exec(callback);
+       book_instances: function(callback) {
+          getBookInstances(callback,req.params.id);
         },
+	
     }, function(err, results) {
         if (err) { return next(err); }
         //Successful, so render
@@ -176,26 +183,30 @@ exports.book_delete_post = function(req, res, next) {
     
     async.parallel({
         book: function(callback) {     
-            Book.findById(req.body.authorid).exec(callback);
+            Book.findById(req.body.bookid4).exec(callback);
         },
         book_instances: function(callback) {
-          BookInstance.find({ 'book': req.body.authorid },'title summary').exec(callback);
+            getBookInstances(callback,req.params.id);
         },
     }, function(err, results) {
         if (err) { return next(err); }
         //Success
-        if (results.book_instances>0) {
+		console.log(req.body.bookid4);
+		console.log(results.book_instances);
+		console.log(results.book_instances>0);
+		console.log(results.book_instances.length);
+        if (results.book_instances.length>0) {
             
             res.render('book_delete', { title: 'Delete Book', book: results.book, book_instances: results.book_instances } );
             return;
         }
         else {
-            
-            Book.findByIdAndRemove(req.body.bookid, function deleteBook(err) {
-                if (err) { return next(err); }
-                //Success - got to author list
-                res.redirect('/catalog/books');
-            });
+            //res.send("deleted");
+             Book.findByIdAndRemove(req.body.bookid4, function deleteBook(err) {
+                 if (err) { return next(err); }
+                 //Success - got to author list
+                 res.redirect('/catalog/books');
+             });
 
         }
     });
