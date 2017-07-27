@@ -1,6 +1,0 @@
-start "C:\Program Files (x86)\nodejs myparam\nodevars.bat" "c:\Dropbox\JS\LocalLibrary\ToStart.bat"
-
-<<<<<<< HEAD
-=======
-set /p "param2=Enter parameter 2: "
->>>>>>> 3d333fd7c706c2989048d7abe905729ea6faf0c7
