@@ -131,11 +131,67 @@ exports.author_delete_post = function(req, res, next) {
 };
 
 // Display Author update form on GET
-exports.author_update_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: Author update GET');
-};
+exports.author_update_get = function(req, res, next) {
 
+    req.sanitize('id').escape();
+    req.sanitize('id').trim();
+
+
+	async.parallel({
+      author: function(callback) {
+        Author.findById(req.params.id,callback);
+      },
+    }, function(err, results) {
+      if (err) { return next(err); }
+        res.render('author_form', { title: 'Update Author',author:results.author});
+    });
+	
+    
+};
 // Handle Author update on POST
-exports.author_update_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: Author update POST');
+exports.author_update_post = function(req, res, next) {
+    
+    //Sanitize id passed in. 
+    req.sanitize('id').escape();
+    req.sanitize('id').trim();
+    
+    //Check other data
+    req.checkBody('first_name', 'First name must be specified.').notEmpty(); //We won't force Alphanumeric, because people might have spaces.
+    req.checkBody('family_name', 'Family name must be specified.').notEmpty();
+    req.checkBody('family_name', 'Family name must be alphanumeric text.').isAlpha();
+    req.checkBody('date_of_birth', 'Invalid date').isDate();
+    req.checkBody('date_of_death', 'Invalid date').optional({ checkFalsy: true }).isDate();
+    
+    req.sanitize('first_name').escape();
+    req.sanitize('family_name').escape();
+    req.sanitize('first_name').trim();     
+    req.sanitize('family_name').trim();
+    req.sanitize('date_of_birth').toDate();
+    req.sanitize('date_of_death').toDate();
+
+    
+
+    var author = new Author(
+      { first_name: req.body.first_name, 
+        family_name: req.body.family_name, 
+        date_of_birth: req.body.date_of_birth,
+        date_of_death: req.body.date_of_death,
+		_id:req.params.id
+       });
+       
+    var errors = req.validationErrors();
+    if (errors) {
+        // Re-render author with error information
+        // Get all authors and genres for form
+		 res.render('author_form', { title: 'Update Author',author:author, errors: errors });
+    } 
+    else {
+        // Data from form is valid. Update the record.
+        Author.findByIdAndUpdate(req.params.id, author, {}, function (err,theauthor) {
+            if (err) { return next(err); }
+            //successful - redirect to book detail page.
+            res.redirect(theauthor.url);
+        });
+    }
+
 };
