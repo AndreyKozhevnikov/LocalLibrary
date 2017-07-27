@@ -79,6 +79,7 @@ exports.book_create_get = function(req, res, next) {
         },
     }, function(err, results) {
         if (err) { return next(err); }
+		 console.log(results.authors);
         res.render('book_form', { title: 'Create Book', authors: results.authors, genres: results.genres });
     });
     
@@ -110,7 +111,7 @@ exports.book_create_post = function(req, res, next) {
         genre: (typeof req.body.genre==='undefined') ? [] : req.body.genre.split(",")
     });
        
-    console.log('BOOK: ' + book);
+   
     
     var errors = req.validationErrors();
     if (errors) {
@@ -134,7 +135,7 @@ exports.book_create_post = function(req, res, next) {
                     results.genres[i].checked='true';
                 }
             }
-
+console.log(book.author);
             res.render('book_form', { title: 'Create Book',authors:results.authors, genres:results.genres, book: book, errors: errors });
         });
 
@@ -240,7 +241,7 @@ exports.book_update_get = function(req, res, next) {
                 }
             }
         }
-		console.log(results.authors.length);
+		console.log(results.book.author);
         res.render('book_form', { title: 'Update Book', authors:results.authors, genres:results.genres, book: results.book });
     });
     

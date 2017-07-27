@@ -14,7 +14,7 @@ block content
         for author in authors
           if book
             option(value=author._id selected=(author._id.toString()==book.author || author._id.toString()==book.author._id? 'selected' : false) ) #{author.name}
-    //-will not output
+          //-will not output
           else
             option(value=author._id) #{author.name}
     div.form-group
