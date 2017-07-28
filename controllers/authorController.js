@@ -136,15 +136,10 @@ exports.author_update_get = function(req, res, next) {
     req.sanitize('id').escape();
     req.sanitize('id').trim();
 
-
-	async.parallel({
-      author: function(callback) {
-        Author.findById(req.params.id,callback);
-      },
-    }, function(err, results) {
-      if (err) { return next(err); }
-        res.render('author_form', { title: 'Update Author',author:results.author});
-    });
+	Author.findById(req.params.id,function(err,result){
+		if (err){return next(err);}
+		res.render('author_form', { title: 'Update Author',author:result});
+	});
 	
     
 };
@@ -181,15 +176,11 @@ exports.author_update_post = function(req, res, next) {
        
     var errors = req.validationErrors();
     if (errors) {
-        // Re-render author with error information
-        // Get all authors and genres for form
 		 res.render('author_form', { title: 'Update Author',author:author, errors: errors });
     } 
     else {
-        // Data from form is valid. Update the record.
         Author.findByIdAndUpdate(req.params.id, author, {}, function (err,theauthor) {
             if (err) { return next(err); }
-            //successful - redirect to book detail page.
             res.redirect(theauthor.url);
         });
     }

@@ -38,13 +38,14 @@ exports.genre_detail = function(req, res, next) {
 };
 
 // Display Genre create form on GET
-exports.genre_create_get = function(req, res, next) {       
+exports.genre_create_get = function(req, res, next) {      
+
     res.render('genre_form', { title: 'Create Genre' });
 };
 
 // Handle Genre create on POST 
 exports.genre_create_post = function(req, res, next) {
-    
+  
     //Check that the name field is not empty
     req.checkBody('name', 'Genre name required').notEmpty(); 
     
@@ -94,7 +95,8 @@ exports.genre_create_post = function(req, res, next) {
 
 // Display Genre delete form on GET
 exports.genre_delete_get = function(req, res, next) {       
-
+  console.log(req) ;
+  
     async.parallel({
         genre: function(callback) {     
             Genre.findById(req.params.id).exec(callback);
@@ -146,11 +148,43 @@ exports.genre_delete_post = function(req, res, next) {
 };
 
 // Display Genre update form on GET
-exports.genre_update_get = function(req, res) {
-    res.send('NOT IMPLEMENTED: Genre update GET');
-};
+exports.genre_update_get = function(req, res, next) {
 
+    req.sanitize('id').escape();
+    req.sanitize('id').trim();
+   	
+	Genre.findById(req.params.id, function(errors,result){
+	    res.render('genre_form', { title: 'Update Genre', genre:result });
+	});
+};
 // Handle Genre update on POST
-exports.genre_update_post = function(req, res) {
-    res.send('NOT IMPLEMENTED: Genre update POST');
+exports.genre_update_post = function(req, res,next) {
+     req.sanitize('id').escape();
+     req.sanitize('id').trim();
+	 //Check that the name field is not empty
+    req.checkBody('name', 'Genre name required').notEmpty(); 
+    
+    //Trim and escape the name field. 
+    req.sanitize('name').escape();
+    req.sanitize('name').trim();
+    
+    //Run the validators
+    var errors = req.validationErrors();
+
+    //Create a genre object with escaped and trimmed data.
+    var genre = new Genre(
+      { name: req.body.name,
+	    _id:req.params.id}
+    );
+	
+    if (errors) {
+      res.render('genre_form', { title: 'Update Genre. Try again.', genre: genre, errors: errors});
+      return;
+    } 
+    else {
+      Genre.findByIdAndUpdate(req.params.id,genre,{},function(error,thegenre){
+		 if (error)  {return next(error);}
+		 res.redirect(thegenre.url);
+	  });
+    }
 };
