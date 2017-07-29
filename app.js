@@ -5,6 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
+var compression = require('compression');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -13,6 +14,7 @@ var catalog = require('./routes/catalog');  //Import routes for "catalog" area o
 
 var app = express();
 
+app.use(compression()); //Compress all routes
 //Set up mongoose connection
 var mongoose = require('mongoose');
 var mongoDB = 'mongodb://library_user:123@ds161012.mlab.com:61012/locallibrary_db';
