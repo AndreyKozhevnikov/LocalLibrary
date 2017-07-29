@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var expressValidator = require('express-validator');
 var compression = require('compression');
+var helmet = require('helmet');
 
 var index = require('./routes/index');
 var users = require('./routes/users');
@@ -13,7 +14,7 @@ var wiki = require('./routes/wiki');
 var catalog = require('./routes/catalog');  //Import routes for "catalog" area of site
 
 var app = express();
-
+app.use(helmet());
 app.use(compression()); //Compress all routes
 //Set up mongoose connection
 var mongoose = require('mongoose');
