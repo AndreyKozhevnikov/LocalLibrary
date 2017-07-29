@@ -14,11 +14,13 @@ var wiki = require('./routes/wiki');
 var catalog = require('./routes/catalog');  //Import routes for "catalog" area of site
 
 var app = express();
+
+
 app.use(helmet());
 app.use(compression()); //Compress all routes
 //Set up mongoose connection
 var mongoose = require('mongoose');
-var mongoDB = 'mongodb://library_user:123@ds161012.mlab.com:61012/locallibrary_db';
+var mongoDB = process.env.MONGODB_URI || 'mongodb://library_user:123@ds161012.mlab.com:61012/locallibrary_db';
 mongoose.connect(mongoDB);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
