@@ -21,6 +21,7 @@ app.use(compression()); //Compress all routes
 //Set up mongoose connection
 var mongoose = require('mongoose');
 var mongoDB = process.env.MONGODB_URI || 'mongodb://library_user:123@ds161012.mlab.com:61012/locallibrary_db';
+console.log("--" + process.env.PORT +"---" +  process.env.MONGODB_URI);
 mongoose.connect(mongoDB);
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
