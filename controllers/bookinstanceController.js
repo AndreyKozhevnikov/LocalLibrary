@@ -93,16 +93,14 @@ exports.bookinstance_delete_get = function(req, res, next) {
 };
 // Handle BookInstance delete on POST
 exports.bookinstance_delete_post = function(req, res, next) {
-
-    req.checkBody('bookinstanceId', 'BookInstance id must exist').notEmpty();  
-         
-    BookInstance.findByIdAndRemove(req.body.bookInstanceId, function deletebookInstance(err) {
-    if (err) { return next(err); }
-      res.redirect('/catalog/bookInstances');
+    req.checkBody('bookinstanceId', 'BookInstance id must exist').notEmpty(); 
+    BookInstance.findByIdAndRemove(req.body.bookInstanceId, function deletebookInstance(err,foundInstance) {
+        if (err) { return next(err); }
+		if (foundInstance==undefined)
+			res.send('there is no such instance');
+		else
+           res.redirect('/catalog/bookInstances');
     });
-
-   
-
 };
 // Display BookInstance update form on GET
 exports.bookinstance_update_get = function(req, res, next) {
